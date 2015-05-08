@@ -1,0 +1,64 @@
+<script>
+  $(document).ready(function() {
+    $('input[type=text]').on('keyup', function () {
+      console.log($(this).val());
+    });
+  });
+</script>
+<p>
+  <strong>Title:</strong>
+  <%= @auction.title %>
+</p>
+
+<p>
+  <strong>Details:</strong>
+  <%= @auction.details %>
+</p>
+
+<p>
+  <strong>Ends on:</strong>
+  <%= @auction.ends_on %>
+</p>
+
+<p>
+  <strong>Seller: </strong>
+  <%= @auction.user.username %>
+</p>
+
+<p>
+  <strong>Reserve price:</strong>
+  <%= @auction.reserve_price %>
+</p>
+
+<% if @auction.user != current_user %>
+<%= form_for @auction.bids.new, url: auction_bids_path(@auction) do |f| %>
+  <strong>Bid here! </strong>
+  <div class="field">
+    <%= f.label :bid_price %> <br>
+    <%= f.text_field :bid_price %> <br>
+  </div>
+  <div class="actions">
+    <%= f.submit "Bid" %>
+  </div>
+<% end %>
+<% end %>
+
+<p>
+  <strong> Bid History: </strong>
+  <br>
+  <% if @auction.bids.count == 0 %>
+    <strong> N/A </strong>
+  <% else %>
+    <strong> Current Bid: <%= @auction.current_bid %> </strong>
+    <br>
+    <% @auction.bids.order(bid_price: :desc).each do |bid| %>
+      <%= number_to_currency(bid.bid_price) %>  <%= time_ago_in_words(bid.created_at) %> ago, by  <%= bid.user.username %>
+      <br>
+    <% end %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_auction_path(@auction) %> |
+<%= link_to 'Back', auctions_path %>
+
+

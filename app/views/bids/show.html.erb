@@ -1,0 +1,20 @@
+<h1> My current biddings </h1>
+<table>
+  <thead>
+    <tr>
+      <th> Title </th>
+      <th> My bid </th>
+      <th> Ends on </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bids.order(created_at: :desc).each do |bid| %>
+      <tr>
+        <td><%= link_to bid.auction.title, bid.auction %></td>
+        <td><%= number_to_currency(bid.bid_price) %></td>
+        <td><%= bid.auction.ends_on %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
